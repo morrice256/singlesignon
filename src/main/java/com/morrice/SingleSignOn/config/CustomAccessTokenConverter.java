@@ -20,7 +20,8 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
     
     @SuppressWarnings("unchecked")
 	public Map<String, Object> getExtraInfo(Authentication auth) {
-        OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) auth.getDetails();
+        OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) 
+        		auth.getDetails();
         return (Map<String, Object>) oauthDetails.getDecodedDetails();
     }
 }

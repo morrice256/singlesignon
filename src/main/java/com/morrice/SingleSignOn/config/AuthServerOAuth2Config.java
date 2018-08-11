@@ -48,8 +48,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    private Environment env;
 	    
 	    @Override
-	    public void configure(AuthorizationServerSecurityConfigurer oauthServer) 
-	      throws Exception {
+	    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
 	        oauthServer
 	          .tokenKeyAccess("permitAll()")
 	          .checkTokenAccess("isAuthenticated()");
@@ -57,19 +56,18 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	 
 	  //TODO: Change magic number to user access
 	    @Override
-	    public void configure(ClientDetailsServiceConfigurer clients) 
-	      throws Exception {
+	    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 	        clients.jdbc(dataSource())
-	          .withClient("sampleClientId")
-	          .authorizedGrantTypes("implicit")
-	          .scopes("read")
-	          .autoApprove(true)
-	          .and()
-	          .withClient("clientIdPassword")
-	          .secret("secret")
-	          .authorizedGrantTypes("password","authorization_code", "refresh_token")
-	          .scopes("read");
-	    }
+			          .withClient("sampleClientId")
+			          .authorizedGrantTypes("implicit")
+			          .scopes("read")
+			          .autoApprove(true)
+			          .and()
+			          .withClient("clientIdPassword")
+			          .secret("secret")
+			          .authorizedGrantTypes("password","authorization_code", "refresh_token")
+			          .scopes("read");
+		    }
 	 
 	    @Override
 	    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
