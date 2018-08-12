@@ -1,13 +1,8 @@
 package com.morrice.SingleSignOn.config;
 
-import java.io.IOException;
-
-import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -28,7 +23,11 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         return new JwtTokenStore(accessTokenConverter());
     }
     
-    //TODO: Change magic number (Class Path)
+    //TODO: Change magic number
+    /**
+     * Asymmetric disabled because signature encode fail  
+     * @return
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
     	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

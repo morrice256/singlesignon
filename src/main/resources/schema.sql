@@ -69,3 +69,15 @@ create table ClientDetails (
   additionalInformation VARCHAR(4096),
   autoApproveScopes VARCHAR(255)
 );
+
+DELETE FROM user WHERE username = 'admin';
+insert into user(username,password,enabled) values('admin','$2y$12$bGxTp/8ER2ind3wKXN9FD.JwVsVwO1EzkfyEy8FvYLFzg3OruFSo2',true);
+
+drop table if exists authorities; 
+create table authorities (
+	username varchar(255) not null,
+	authority varchar(50) not null
+);
+insert into authorities(username,authority) values('admin','ROLE_ADMIN');
+insert into authorities(username,authority) values('user','ROLE_USER');
+

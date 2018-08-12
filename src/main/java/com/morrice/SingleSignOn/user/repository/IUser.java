@@ -11,5 +11,9 @@ public interface IUser extends IModel{
 	void setPassword(String password);
 
 	String getLogin();
+
+	Boolean getEnabled();
+
+	void setEnabled(Boolean enabled);
 	
 }

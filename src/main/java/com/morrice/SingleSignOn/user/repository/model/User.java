@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -31,7 +30,7 @@ public class User implements IUser  {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(unique=true)
+	@Column(unique=true, name="username")
 	@NotNull
 	private String login;
 
@@ -40,6 +39,9 @@ public class User implements IUser  {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
+	@Column
+	private Boolean enabled;
+	
 	@Column(updatable=false)
 	@CreationTimestamp
 	@JsonProperty(access = Access.WRITE_ONLY)
@@ -77,6 +79,16 @@ public class User implements IUser  {
 	@Override
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	@Override
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	@Override
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@Override

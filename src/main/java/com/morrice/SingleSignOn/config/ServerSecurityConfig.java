@@ -1,5 +1,8 @@
 package com.morrice.SingleSignOn.config;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,11 +22,19 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
  
+	@Autowired
+	private DataSource dataSource;
 	
-	//TODO: Change users to login
+	//TODO: Change format to search in Database 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    	auth.inMemoryAuthentication()
+    	auth
+    	
+//    	.jdbcAuthentication().dataSource(dataSource)
+//        	.usersByUsernameQuery("select username, password, enabled from user where username=?")
+//        	.authoritiesByUsernameQuery("select username, authority from authorities where username=?")
+//                .passwordEncoder(new BCryptPasswordEncoder());
+    		.inMemoryAuthentication()
           	.withUser("john").password("123").roles("USER");
     }
  
