@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>SingleSignOn</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Application with Jwt and OAuth2 Authentication, developed by Morrice256</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -90,8 +90,16 @@
 	            </configuration>
 			</plugin>
 		</plugins>
+	    <resources>
+	        <resource>
+	            <directory>src/main/resources</directory>
+	            <filtering>true</filtering>
+	            <excludes>
+	                <exclude>*.jks</exclude>
+	            </excludes>
+	        </resource>
+	    </resources>
 	</build>
-
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>

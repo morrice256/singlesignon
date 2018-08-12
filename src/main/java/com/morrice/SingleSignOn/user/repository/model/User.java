@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -22,7 +23,7 @@ import com.morrice.SingleSignOn.user.repository.IUser;
 @Entity
 @Table(name = "user")
 @DynamicUpdate//Don't Work
-public class User implements IUser {
+public class User implements IUser  {
 
 	private static final long serialVersionUID = 7692651870052707754L;
 

@@ -18,6 +18,7 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -34,7 +35,7 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 import com.morrice.SingleSignOn.foundation.CustomTokenEnhancer;
 
 @Configuration
-@EnableAuthorizationServer
+@EnableAuthorizationServer //Enable Authorization server Oauth2.0 
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter {
 		  
 	    @Autowired
@@ -47,6 +48,9 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    @Autowired
 	    private Environment env;
 	    
+	    /**
+	     * Security restriction 
+	     */
 	    @Override
 	    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
 	        oauthServer
@@ -55,9 +59,15 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    }
 	 
 	  //TODO: Change magic number to user access
+	    /**
+	     * Service details to client application
+	     * And where we do save information sessions
+	     * in this case DATABASE, because scalability.
+	     */
 	    @Override
 	    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-	        clients.jdbc(dataSource())
+	        clients//.inMemory()
+	        		.jdbc(dataSource())
 			          .withClient("sampleClientId")
 			          .authorizedGrantTypes("implicit")
 			          .scopes("read")
@@ -69,13 +79,18 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 			          .scopes("read");
 		    }
 	 
+	    /**
+	     * End points resources services to authorizer and
+	     * Token services.
+	     * In this case Token enchance
+	     */
 	    @Override
 	    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 	    	TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 	    	tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-	        endpoints.tokenStore(tokenStore())
-	        			.accessTokenConverter(accessTokenConverter())
-	          			.authenticationManager(authenticationManager);
+            endpoints.tokenStore(tokenStore())
+            		 .tokenEnhancer(tokenEnhancerChain)
+            		 .authenticationManager(authenticationManager);
 	    }
 	 
 	    @Bean
@@ -92,8 +107,10 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    @Bean
 	    public JwtAccessTokenConverter accessTokenConverter() {
 	    	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-	        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("singlesignon.jks"), "morroce256".toCharArray());
-	        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("singlesignon"));
+	    	converter.setSigningKey("123");
+//	        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(
+//	        		new ClassPathResource("singlesignon.jks"), "morroce256".toCharArray());
+//	        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("singlesignon"));
 	        return converter;
 	    }
 	    
@@ -128,5 +145,10 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	        defaultTokenServices.setTokenStore(tokenStore());
 	        defaultTokenServices.setSupportRefreshToken(true);
 	        return defaultTokenServices;
+	    }
+	    
+	    @Bean
+	    public BCryptPasswordEncoder passwordEncoder() {
+	        return new BCryptPasswordEncoder();
 	    }
 }
