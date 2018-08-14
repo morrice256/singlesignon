@@ -6,6 +6,6 @@ import com.morrice.SingleSignOn.user.repository.model.User;
 
 public interface UserRepository extends CrudRepository<User, Integer>{
 
-	User findOneByLogin(String username);
+	User findByLogin(String login);
 
 }

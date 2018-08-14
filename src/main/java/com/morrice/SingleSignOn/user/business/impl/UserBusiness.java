@@ -1,8 +1,12 @@
 package com.morrice.SingleSignOn.user.business.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.morrice.SingleSignOn.foundation.exceptions.NotFoundException;
 import com.morrice.SingleSignOn.user.business.IUserBusiness;
 import com.morrice.SingleSignOn.user.repository.IUser;
 import com.morrice.SingleSignOn.user.repository.crud.UserRepository;
@@ -15,13 +19,18 @@ public class UserBusiness implements IUserBusiness{
 	private UserRepository userRepository;
 	
 	@Override
-	public IUser save(User user) {
+	public IUser save(User user){
+		user.setEnabled(Boolean.TRUE);
+		user.setPassword( passwordEncoder().encode( user.getPassword() ) );
 		return userRepository.save(user);
 	}
 
 	@Override
-	public IUser findById(Integer id) {
+	public IUser findById(Integer id) throws NotFoundException {
 		User user = userRepository.findOne(id);
+		if(user == null) {
+			throw new NotFoundException();
+		}
 		return user;	
 	}
 	
@@ -43,6 +52,9 @@ public class UserBusiness implements IUserBusiness{
 		userRepository.delete(id);	
 	}
 	
-	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
 	
 }
