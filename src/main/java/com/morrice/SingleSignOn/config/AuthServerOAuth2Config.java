@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import com.morrice.SingleSignOn.foundation.CustomTokenEnhancer;
 
@@ -53,14 +55,13 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	     */
 	    @Override
 	    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-	        clients
-	        		  .jdbc(customDataSource.dataSource())
+	        clients.jdbc(customDataSource.dataSource())
 			          .withClient("sampleClientId")
 			          .authorizedGrantTypes("implicit")
 			          .scopes("read")
 			          .autoApprove(true)
 			          .and()
-			          .withClient("clientIdPassword")
+			          .withClient("clientId")
 			          .secret("secret")
 			          .authorizedGrantTypes("password","authorization_code", "refresh_token")
 			          .scopes("read");
@@ -76,7 +77,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    	TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 	    	tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
             endpoints.tokenStore(tokenStore())
-            		 .tokenEnhancer(tokenEnhancerChain)
+            		 .tokenEnhancer(accessTokenConverter())
             		 .authenticationManager(authenticationManager);
 	    }
 	 
@@ -98,10 +99,9 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    @Bean
 	    public JwtAccessTokenConverter accessTokenConverter() {
 	    	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-	    	converter.setSigningKey("123");
-//	        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(
-//	        		new ClassPathResource("singlesignon.jks"), "morroce256".toCharArray());
-//	        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("singlesignon"));
+	        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(
+	        		new ClassPathResource("singlesignon.jks"), "morroce256".toCharArray());
+	        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("singlesignon"));
 	        return converter;
 	    }
 
