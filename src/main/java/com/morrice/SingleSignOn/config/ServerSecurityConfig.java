@@ -55,7 +55,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
-        web.ignoring().antMatchers("/user/**");
+        //web.ignoring().antMatchers("/user/**");
     }
     
 	@Bean

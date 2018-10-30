@@ -12,7 +12,15 @@ create table oauth_client_details (
   additional_information VARCHAR(4096),
   autoapprove VARCHAR(255)
 );
+
+INSERT INTO oauth_client_details
+(client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
+VALUES 
+('clientId', '', 'secret', 'read', 'password,authorization_code,refresh_token', '', '', NULL, NULL, '{}', '');
  
+INSERT INTO users (`username`, `password`, `enabled`, `create_date_time`)
+ VALUES ('morrice256', '$2a$10$JBQHS4B0Tx742rbfDh1q0urbPgZHDIxLqI7RKQjakY2YVuXa168Ey', true, now());
+
 drop table if exists oauth_client_token;
 create table oauth_client_token (
   token_id VARCHAR(255),
@@ -53,21 +61,4 @@ create table oauth_approvals (
     status VARCHAR(10),
     expiresAt TIMESTAMP,
     lastModifiedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
- 
-drop table if exists ClientDetails;
-create table ClientDetails (
-  appId VARCHAR(255) PRIMARY KEY,
-  resourceIds VARCHAR(255),
-  appSecret VARCHAR(255),
-  scope VARCHAR(255),
-  grantTypes VARCHAR(255),
-  redirectUrl VARCHAR(255),
-  authorities VARCHAR(255),
-  access_token_validity INTEGER,
-  refresh_token_validity INTEGER,
-  additionalInformation VARCHAR(4096),
-  autoApproveScopes VARCHAR(255)
-);
-
-
+); 
