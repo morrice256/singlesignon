@@ -43,6 +43,8 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+        	.headers().frameOptions().sameOrigin()
+        	.and()
         	.sessionManagement()
         	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         	.and()
@@ -55,7 +57,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
-        //web.ignoring().antMatchers("/user/**");
+        web.ignoring().antMatchers("/**/h2/**");
     }
     
 	@Bean
@@ -75,6 +77,6 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 	    authProvider.setPasswordEncoder(passwordEncoder());
 	    return authProvider;
 	}
-
+	
 
 }
