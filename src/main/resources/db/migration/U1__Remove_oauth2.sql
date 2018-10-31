@@ -1,4 +1,3 @@
-drop table if exists ClientDetails;
 drop table if exists oauth_approvals;
 drop table if exists oauth_code;
 drop table if exists oauth_refresh_token;

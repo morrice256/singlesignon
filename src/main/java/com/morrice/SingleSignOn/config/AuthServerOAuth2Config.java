@@ -68,7 +68,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	    	TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 	    	tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
             endpoints.tokenStore(tokenStore())
-            		 .tokenEnhancer(accessTokenConverter())
+            		 .tokenEnhancer(tokenEnhancerChain)
             		 .authenticationManager(authenticationManager);
 	    }
 	 
