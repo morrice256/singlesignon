@@ -13,39 +13,37 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.morrice.SingleSignOn.user.repository.IUser;
+import com.morrice.SingleSignOn.user.repository.IRole;
 
 @Entity
-@Table(name = "users")
-@DynamicUpdate//Don't Work
-public class User implements IUser  {
-
-	private static final long serialVersionUID = 7692651870052707754L;
+@Table(name = "roles")
+public class Role implements IRole{
+  
+	private static final long serialVersionUID = 6981915020630263737L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+ 
+    private String name;
+    @ManyToMany(mappedBy = "roles")
+    private Collection<User> users;
+ 
+    @ManyToMany
+    @JoinTable(
+        name = "roles_privileges", 
+        joinColumns = @JoinColumn(
+          name = "role_id", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "privilege_id", referencedColumnName = "id"))
+    private Collection<Privilege> privileges;
 
-	@Column(unique=true, name="username")
-	@NotNull
-	private String login;
-
-	@Column
-	@NotNull
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private String password;
-
-	@Column
-	private Boolean enabled;
-	
 	@Column(updatable=false)
 	@CreationTimestamp
 	@JsonProperty(access = Access.WRITE_ONLY)
@@ -54,54 +52,37 @@ public class User implements IUser  {
 	@Column
 	@UpdateTimestamp
 	private Timestamp updateDateTime;
-
-    @ManyToMany
-    @JoinTable( 
-        name = "users_roles", 
-        joinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "role_id", referencedColumnName = "id")) 
-    private Collection<Role> roles;
-	
-	@Override
+    
 	public Integer getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	@Override
-	public String getLogin() {
-		return login;
+	public String getName() {
+		return name;
 	}
 
-	@Override
-	public void setLogin(String login) {
-		this.login = login;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Override
-	public String getPassword() {
-		return password;
+	public Collection<User> getUsers() {
+		return users;
 	}
 
-	@Override
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	@Override
-	public Boolean getEnabled() {
-		return enabled;
+	public void setUsers(Collection<User> users) {
+		this.users = users;
 	}
 
-	@Override
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
+	public Collection<Privilege> getPrivileges() {
+		return privileges;
+	}
+
+	public void setPrivileges(Collection<Privilege> privileges) {
+		this.privileges = privileges;
 	}
 
 	@Override
@@ -126,5 +107,6 @@ public class User implements IUser  {
 	public void setUpdateDateTime(Timestamp updateDateTime) {
 		this.updateDateTime = updateDateTime;
 	}
-
+    
+    
 }
