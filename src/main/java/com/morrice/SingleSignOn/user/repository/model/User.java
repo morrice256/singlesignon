@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -35,11 +34,9 @@ public class User implements IUser  {
 	private Integer id;
 
 	@Column(unique=true, name="username")
-	@NotNull
 	private String login;
 
 	@Column
-	@NotNull
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 

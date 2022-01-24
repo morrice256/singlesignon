@@ -29,7 +29,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth){
     	auth.authenticationProvider(authProvider());
     }
 
@@ -55,7 +55,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web){
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
         web.ignoring().antMatchers("/**/h2/**");
     }

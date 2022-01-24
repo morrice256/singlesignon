@@ -12,6 +12,8 @@ import com.morrice.SingleSignOn.user.repository.IUser;
 import com.morrice.SingleSignOn.user.repository.crud.UserRepository;
 import com.morrice.SingleSignOn.user.repository.model.User;
 
+import java.util.Optional;
+
 @Service
 public class UserBusiness implements IUserBusiness{
 
@@ -27,17 +29,16 @@ public class UserBusiness implements IUserBusiness{
 
 	@Override
 	public IUser findById(Integer id) throws NotFoundException {
-		User user = userRepository.findOne(id);
-		if(user == null) {
+		Optional<User> user = userRepository.findById(id);
+		if(!user.isPresent()) {
 			throw new NotFoundException();
 		}
-		return user;	
+		return user.get();
 	}
 	
 	@Override
-	public IUser update(User user, Integer id) {
-		//TODO: this block exists because @DynamicUpdate in entity not work correctly 
-		User userOld = userRepository.findOne(id);
+	public IUser update(User user, Integer id) throws NotFoundException {
+		IUser userOld = this.findById(id);
 		if(user.getPassword() == null) {
 			user.setPassword(userOld.getPassword());
 		}
@@ -49,7 +50,7 @@ public class UserBusiness implements IUserBusiness{
 
 	@Override
 	public void deleteById(Integer id) {
-		userRepository.delete(id);	
+		userRepository.deleteById(id);
 	}
 	
 	@Bean

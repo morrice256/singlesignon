@@ -14,7 +14,7 @@ public interface IUserBusiness {
 
 	void deleteById(Integer id);
 
-	IUser update(User user, Integer id);
+	IUser update(User user, Integer id) throws NotFoundException;
 
 	PasswordEncoder passwordEncoder();
 

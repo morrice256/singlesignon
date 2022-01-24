@@ -35,7 +35,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}")
-	public IUser update(@RequestBody User user, @PathVariable Integer id) {		
+	public IUser update(@RequestBody User user, @PathVariable Integer id) throws NotFoundException {
 		return userBusiness.update(user, id);		
 	}
 	
